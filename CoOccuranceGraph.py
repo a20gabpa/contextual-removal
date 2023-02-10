@@ -27,7 +27,7 @@ def CreateGraph():
     weight = []
     for i in stuffAndObjects:
         # Skipping stuff/objects we dont want.
-        if i.id == 1 or i.id == 183 or key == 181 or key == 167 or key == 172 or key == 105 or key == 132:
+        if i.id == 1 or i.id == 183 or i.id == 181 or i.id == 167 or i.id == 172 or i.id == 105 or i.id == 132:
             continue
 
         sumCoOccurance = 0

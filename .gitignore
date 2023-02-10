@@ -1,5 +1,6 @@
 
 *.bak
+__pycache__/
 Dataset/annotations
 Dataset/test2017
 Dataset/train2017
@@ -8,3 +9,6 @@ pycocotools/
 Personal/
 .ipynb_checkpoints/
 .idea*
+IdLookup.txt
+Co_occurance.txt
+CoOccuranceGraph.pdf
