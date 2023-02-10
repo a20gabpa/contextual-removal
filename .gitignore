@@ -6,3 +6,4 @@ Dataset/train2017
 Dataset/val2017
 Personal/
 .ipynb_checkpoints/
+.idea*
