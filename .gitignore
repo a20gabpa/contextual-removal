@@ -1,2 +1,5 @@
 
 *.bak
+Dataset/
+Personal/
+.ipynb_checkpoints/
