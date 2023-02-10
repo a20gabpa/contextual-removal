@@ -4,6 +4,7 @@ Dataset/annotations
 Dataset/test2017
 Dataset/train2017
 Dataset/val2017
+pycocotools/
 Personal/
 .ipynb_checkpoints/
 .idea*

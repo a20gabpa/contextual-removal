@@ -4,16 +4,14 @@ import matplotlib.pyplot as plt
 import pickle
 import json
 import networkx as nx
+import os
 from StuffObject import StuffObjectNode
 
 def CreateGraph():
     # If we do not have a Co_occurance.txt or IdLookup.txt file yet we will call the function that creates them.
     if not os.path.isfile("./Co_occurance.txt") or not os.path.isfile("./IdLookup.txt"):
         from BuildCoOccurance import CreateCoOccurance
-        try:
-            CreateCoOccurance()
-        except:
-            exit("File creation failed for some reason.")
+        CreateCoOccurance()
 
     # TODO: Co_occurance is misspelled
     with open("Co_occurance.txt", "rb") as f:

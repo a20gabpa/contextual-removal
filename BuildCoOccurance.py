@@ -1,4 +1,4 @@
-from cocoapi-master.pycocotools.coco import COCO
+from pycocotools.coco import COCO
 from StuffObject import StuffObjectNode
 import pickle
 import json
