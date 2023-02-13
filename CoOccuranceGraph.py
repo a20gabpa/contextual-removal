@@ -7,7 +7,7 @@ import networkx as nx
 import os
 from StuffObject import StuffObjectNode
 
-def CreateGraph():
+def CreateGraph(omit):
     # If we do not have a Co_occurance.txt or IdLookup.txt file yet we will call the function that creates them.
     if not os.path.isfile("./Co_occurance.txt") or not os.path.isfile("./IdLookup.txt"):
         from BuildCoOccurance import CreateCoOccurance
@@ -27,23 +27,23 @@ def CreateGraph():
     weight = []
     for i in stuffAndObjects:
         # Skipping stuff/objects we dont want.
-        if i.id == 1 or i.id == 183 or i.id == 181 or i.id == 167 or i.id == 172 or i.id == 105 or i.id == 132:
-            continue
-
+        for j in omit:
+            if i.id == j:
+                continue
         sumCoOccurance = 0
         # Need to get sum to extract percentage.
         for key, value in i.otherStuffObjects.items():
             # Skipping stuff/objects we dont want.
-            if key == 1 or key == 183 or key == 181 or key == 167 or key == 172 or key == 105 or key == 132:
-                continue
-
+            for j in omit:
+                if key == j:
+                    continue
             sumCoOccurance += value
         # For every weighted relation in stuffandobject
         for key, value in i.otherStuffObjects.items():
             # Skipping stuff/objects we dont want.
-            if key == 1 or key == 183 or key == 181 or key == 167 or key == 172 or key == 105 or key == 132:
-                continue
-
+            for j in omit:
+                if key == j:
+                    continue
             # Only allow edges with a significant enough weight.
             if (value / sumCoOccurance) * 100 > 0.5:
                 fromX.append(i.name)
@@ -62,4 +62,6 @@ def CreateGraph():
     plt.savefig('CoOccuranceGraph.pdf')
 
 
-CreateGraph()
+toOmit = [1, 183, 181, 167, 172, 105, 132]
+
+CreateGraph(toOmit)
