@@ -28,23 +28,32 @@ class CoOccuranceGraph:
         weight = []
         for i in stuffAndObjects:
             # Skipping stuff/objects we dont want.
+            shouldContinue == false
             for j in omit:
                 if i.id == j:
-                    continue
+                    shouldContinue == true
+            if shouldContinue:
+                continue
             sumCoOccurance = 0
             # Need to get sum to extract percentage.
             for key, value in i.otherStuffObjects.items():
+                shouldContinue == false
                 # Skipping stuff/objects we dont want.
                 for j in omit:
                     if key == j:
-                        continue
+                        shouldContinue == true
+                if shouldContinue:
+                    continue
                 sumCoOccurance += value
             # For every weighted relation in stuffandobject
             for key, value in i.otherStuffObjects.items():
+                shouldContinue == false
                 # Skipping stuff/objects we dont want.
                 for j in omit:
                     if key == j:
-                        continue
+                        shouldContinue == true
+                if shouldContinue:
+                    continue
                 # Only allow edges with a significant enough weight.
                 if (value / sumCoOccurance) * 100 > 0.5:
                     fromX.append(i.name)
