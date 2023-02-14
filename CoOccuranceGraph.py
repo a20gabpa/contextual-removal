@@ -67,7 +67,7 @@ class CoOccuranceGraph:
 
         plt.title("Co-Occurance clustering")
         plt.figure(figsize=(150, 150))
-        nx.draw(G, node_size=10000, node_color="cyan", with_labels=True)
+        nx.draw_spring(G, node_size=10000, node_color="cyan", with_labels=True)
 
         plt.savefig('CoOccuranceGraph.pdf')
 
