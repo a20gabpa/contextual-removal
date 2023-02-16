@@ -121,19 +121,44 @@ print("Euc distance between car and bus")
 toTest = ['bus', 'car']
 positionObj = graph.PositionOfObjects(toTest)
 centroid = graph.GetCentroid(positionObj)
-
+simDistance = 0
 for key, value in positionObj.items():
-    print(graph.GetEuclideanDistance(centroid, value))
+    simDistance += graph.GetEuclideanDistance(centroid, value)
+print(f"Sum of Euc Distance for: 'bus', 'car' = {simDistance}")
+
 print("Euc distance between car and elephant")
 toTest = ['car', 'elephant']
 positionObj = graph.PositionOfObjects(toTest)
 centroid = graph.GetCentroid(positionObj)
+simDistance = 0
 for key, value in positionObj.items():
-    print(graph.GetEuclideanDistance(centroid, value))
+    simDistance += graph.GetEuclideanDistance(centroid, value)
+print(f"Sum of Euc Distance for: 'car', 'elephant' = {simDistance}")
 
 print("Euc distance between bus and elephant")
 toTest = ['bus', 'elephant']
 positionObj = graph.PositionOfObjects(toTest)
 centroid = graph.GetCentroid(positionObj)
+simDistance = 0
 for key, value in positionObj.items():
-    print(graph.GetEuclideanDistance(centroid, value))
+    simDistance += graph.GetEuclideanDistance(centroid, value)
+print(f"Sum of Euc Distance for: bus and elephant = {simDistance}")
+
+
+print("Euc distance between bed, pillow, tv, remote, carpet")
+toTest = ['bed', 'pillow', 'tv', 'remote', 'carpet']
+positionObj = graph.PositionOfObjects(toTest)
+centroid = graph.GetCentroid(positionObj)
+simDistance = 0
+for key, value in positionObj.items():
+    simDistance += graph.GetEuclideanDistance(centroid, value)
+print(f"Sum of Euc Distance for: 'bed', 'pillow', 'tv', 'remote', 'carpet' = {simDistance}")
+
+print("Euc distance between snowboard, pillow, tv, remote, carpet")
+toTest = ['snowboard', 'pillow', 'tv', 'remote', 'carpet']
+positionObj = graph.PositionOfObjects(toTest)
+centroid = graph.GetCentroid(positionObj)
+simDistance = 0
+for key, value in positionObj.items():
+    simDistance += graph.GetEuclideanDistance(centroid, value)
+print(f"Sum of Euc Distance for: 'snowboard', 'pillow', 'tv', 'remote', 'carpet' = {simDistance}")
