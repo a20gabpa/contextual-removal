@@ -5,6 +5,7 @@ import pickle
 import json
 import networkx as nx
 import os
+import math
 from StuffObject import StuffObjectNode
 
 class CoOccuranceGraph:
@@ -88,15 +89,51 @@ class CoOccuranceGraph:
         for key, value in objects.items():
             sumX += value[0]
             sumY += value[1]
-        #Centroid is the center of all nodes. it equals [sumX/amountOfNodes, sumY/amountOfNodes]
+
+        #Centroid is the center of all the nodes given.
         centroid = [sumX/amountOfNodes, sumY/amountOfNodes]
         return centroid
 
+
+    def GetEuclideanDistance(self, centroid, object):
+        centroidX = centroid[0]
+        centroidY = centroid[1]
+        objectX = object[0]
+        objectY = object[1]
+        # square((objectX - centroidX)^2 + (objectY - centroidY)^2)
+        return math.sqrt((objectX - centroidX)**2 + (objectY - centroidY)**2)
+
+
 toOmit = [1, 183, 181, 167, 172, 105, 132]
 graph = CoOccuranceGraph(toOmit)
-toPrint = ['truck', 'boat', 'elephant']
+toPrint = ['bus', 'car', 'elephant']
 print(graph.PositionOfObjects(toPrint))
 
 printXY = graph.PositionOfObjects(toPrint)
 
 print(graph.GetCentroid(printXY))
+centroid = graph.GetCentroid(printXY)
+for key, value in printXY.items():
+    print(key)
+    print(graph.GetEuclideanDistance(centroid, value))
+
+print("Euc distance between car and bus")
+toTest = ['bus', 'car']
+positionObj = graph.PositionOfObjects(toTest)
+centroid = graph.GetCentroid(positionObj)
+
+for key, value in positionObj.items():
+    print(graph.GetEuclideanDistance(centroid, value))
+print("Euc distance between car and elephant")
+toTest = ['car', 'elephant']
+positionObj = graph.PositionOfObjects(toTest)
+centroid = graph.GetCentroid(positionObj)
+for key, value in positionObj.items():
+    print(graph.GetEuclideanDistance(centroid, value))
+
+print("Euc distance between bus and elephant")
+toTest = ['bus', 'elephant']
+positionObj = graph.PositionOfObjects(toTest)
+centroid = graph.GetCentroid(positionObj)
+for key, value in positionObj.items():
+    print(graph.GetEuclideanDistance(centroid, value))
