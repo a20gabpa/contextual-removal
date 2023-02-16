@@ -81,7 +81,22 @@ class CoOccuranceGraph:
 
         return allObjects
 
+    def GetCentroid(self, objects):
+        sumX = 0
+        sumY = 0
+        amountOfNodes = len(objects)
+        for key, value in objects.items():
+            sumX += value[0]
+            sumY += value[1]
+        #Centroid is the center of all nodes. it equals [sumX/amountOfNodes, sumY/amountOfNodes]
+        centroid = [sumX/amountOfNodes, sumY/amountOfNodes]
+        return centroid
+
 toOmit = [1, 183, 181, 167, 172, 105, 132]
 graph = CoOccuranceGraph(toOmit)
-toPrint = ['truck', 'boat']
+toPrint = ['truck', 'boat', 'elephant']
 print(graph.PositionOfObjects(toPrint))
+
+printXY = graph.PositionOfObjects(toPrint)
+
+print(graph.GetCentroid(printXY))
