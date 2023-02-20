@@ -105,17 +105,13 @@ class CoOccuranceGraph:
 
     def FindEuclideanDistance(self, objects):
         nodePositions = self.PositionOfObjects(objects)
-        centroid = graph.GetCentroid(nodePositions)
+        centroid = self.GetCentroid(nodePositions)
         eucDistance = 0
         for key, value in nodePositions.items():
             eucDistance += self.GetEuclideanDistance(centroid, value)
         return eucDistance
 
     def GetLowestAndHighestEucDistance(self, objects):
-        #If there is only one object we return an error
-        if len(objects) <= 1:
-            return 0, 0
-
         #Setting highest and lowest to values that realistically shouldnt be retained.
         lowest = 100000
         highest = -10000
@@ -127,7 +123,6 @@ class CoOccuranceGraph:
         #       [person, horse], [horse,dog], [person, dog]
         for object in objects:
             removed = objects.pop(0)
-            print(objects)
             hightOrLow = self.FindEuclideanDistance(objects)
             if hightOrLow < lowest:
                 lowest = hightOrLow
@@ -138,76 +133,3 @@ class CoOccuranceGraph:
             objects.append(removed)
         return lowest, highest, lowestRemoved, highestRemoved
 
-
-toOmit = [1, 183, 181, 167, 172, 105, 132]
-graph = CoOccuranceGraph(toOmit)
-toPrint = ['bus', 'car', 'elephant']
-print(graph.PositionOfObjects(toPrint))
-
-printXY = graph.PositionOfObjects(toPrint)
-
-print(graph.GetCentroid(printXY))
-centroid = graph.GetCentroid(printXY)
-for key, value in printXY.items():
-    print(key)
-    print(graph.GetEuclideanDistance(centroid, value))
-
-print("Euc distance between car and bus")
-toTest = ['bus', 'car']
-positionObj = graph.PositionOfObjects(toTest)
-centroid = graph.GetCentroid(positionObj)
-simDistance = 0
-for key, value in positionObj.items():
-    simDistance += graph.GetEuclideanDistance(centroid, value)
-print(f"Sum of Euc Distance for: 'bus', 'car' = {simDistance}")
-
-print("Euc distance between car and elephant")
-toTest = ['car', 'elephant']
-positionObj = graph.PositionOfObjects(toTest)
-centroid = graph.GetCentroid(positionObj)
-simDistance = 0
-for key, value in positionObj.items():
-    simDistance += graph.GetEuclideanDistance(centroid, value)
-print(f"Sum of Euc Distance for: 'car', 'elephant' = {simDistance}")
-
-print("Euc distance between bus and elephant")
-toTest = ['bus', 'elephant']
-positionObj = graph.PositionOfObjects(toTest)
-centroid = graph.GetCentroid(positionObj)
-simDistance = 0
-for key, value in positionObj.items():
-    simDistance += graph.GetEuclideanDistance(centroid, value)
-print(f"Sum of Euc Distance for: bus and elephant = {simDistance}")
-
-
-print("Euc distance between bed, pillow, tv, remote, carpet")
-toTest = ['bed', 'pillow', 'tv', 'remote', 'carpet']
-positionObj = graph.PositionOfObjects(toTest)
-centroid = graph.GetCentroid(positionObj)
-simDistance = 0
-for key, value in positionObj.items():
-    simDistance += graph.GetEuclideanDistance(centroid, value)
-print(f"Sum of Euc Distance for: 'bed', 'pillow', 'tv', 'remote', 'carpet' = {simDistance}")
-
-print("Euc distance between snowboard, pillow, tv, remote, carpet")
-toTest = ['snowboard', 'pillow', 'tv', 'remote', 'carpet']
-positionObj = graph.PositionOfObjects(toTest)
-centroid = graph.GetCentroid(positionObj)
-simDistance = 0
-for key, value in positionObj.items():
-    simDistance += graph.GetEuclideanDistance(centroid, value)
-print(f"Sum of Euc Distance for: 'snowboard', 'pillow', 'tv', 'remote', 'carpet' = {simDistance}")
-
-# New version that does it all.
-print("Euc distance between snowboard, pillow, tv, remote, carpet, Test 2")
-toTest = ['snowboard', 'pillow', 'tv', 'remote', 'carpet']
-print(f"Sum of Euc Distance for: 'snowboard', 'pillow', 'tv', 'remote', 'carpet' = {graph.FindEuclideanDistance(toTest)}")
-
-print("Tesing if the function does what it should")
-toTest = ['bed', 'snowboard', 'pillow', 'tv', 'remote', 'carpet']
-a, b ,c ,d = graph.GetLowestAndHighestEucDistance(toTest)
-print(a)
-print(c)
-
-print(b)
-print(d)
