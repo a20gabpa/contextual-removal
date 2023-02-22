@@ -110,26 +110,37 @@ class CoOccuranceGraph:
         for key, value in nodePositions.items():
             eucDistance += self.GetEuclideanDistance(centroid, value)
         return eucDistance
-
-    def GetLowestAndHighestEucDistance(self, objects):
+        
+    # Get the combinations with the lowest and highest euclidian distances.
+    # With an input of [person, horse, dog] the combinations could include:
+    #       [person, horse], [horse,dog], [person, dog]
+    def GetLowestAndHighestEucDistance(self, objects, stuff = ""):
         #Setting highest and lowest to values that realistically shouldnt be retained.
         lowest = 100000
         highest = -10000
         lowestRemoved = ""
         highestRemoved = ""
-
-        # Get the combinations with the lowest and highest euclidian distances.
-        # With an input of [person, horse, dog] the combinations could include:
-        #       [person, horse], [horse,dog], [person, dog]
-        for object in objects:
-            removed = objects.pop(0)
-            hightOrLow = self.FindEuclideanDistance(objects)
+        # We want to include stuff in our calculation, we however do not want to find outliars in stuff, only objects.
+        # Stuff will serve as an anchor.
+        # We create an array and append objects/stuff to the end of it.
+        objectAndStuff = []
+        for i in objects:
+            objectAndStuff.append(i)
+            
+        if(stuff):
+            for i in stuff:
+                objectAndStuff.append(i)
+        
+        # We deque from objectAndStuff objects.size -1 amount of times, this ensures that the stuff in objectsAndStuff are never touched.
+        for i in range(len(objects)):
+            removed = objectAndStuff.pop(0)
+            hightOrLow = self.FindEuclideanDistance(objectAndStuff)
             if hightOrLow < lowest:
                 lowest = hightOrLow
                 lowestRemoved = removed
             if hightOrLow > highest:
                 highest = hightOrLow
                 highestRemoved = removed
-            objects.append(removed)
+            objectAndStuff.append(removed)
         return lowest, highest, lowestRemoved, highestRemoved
 
