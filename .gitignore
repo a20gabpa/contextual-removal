@@ -1,17 +1,12 @@
 
 *.bak
 __pycache__/
-Dataset/annotations
-Dataset/test2017
-Dataset/train2017
-Dataset/val2017
 pycocotools/
 Personal/
 
-dataset/annotations
-dataset/coco
-dataset/yolo
-
+dataset/annotations/
+dataset/coco/
+dataset/yolo/
 .ipynb_checkpoints/
 .idea*
 IdLookup.txt

@@ -5,8 +5,8 @@ import json
 
 
 def CreateCoOccurance():
-    object_annotation_path = "Dataset/annotations/object_annotations/instances_train2017.json"
-    stuff_annotation_path = "Dataset/annotations/stuff_annotations/stuff_train2017.json"
+    object_annotation_path = "dataset/annotations/instances_train2017.json"
+    stuff_annotation_path = "dataset/annotations/stuff_train2017.json"
     object_annotations = COCO(annotation_file=object_annotation_path)
     stuff_annotations = COCO(annotation_file=stuff_annotation_path)
 
