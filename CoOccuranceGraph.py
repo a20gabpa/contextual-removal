@@ -9,7 +9,7 @@ import math
 from StuffObject import StuffObjectNode
 
 class CoOccuranceGraph:
-    def __init__(self, omit, createpdf = true, relationcutoff = 0.5, usepercentage = true):
+    def __init__(self, omit, createpdf = True, relationcutoff = 0.5, usepercentage = True):
         # If we do not have a Co_occurance.txt or IdLookup.txt file yet we will call the function that creates them.
         if not os.path.isfile("./Co_occurance.txt") or not os.path.isfile("./IdLookup.txt"):
             from BuildCoOccurance import CreateCoOccurance
@@ -46,7 +46,7 @@ class CoOccuranceGraph:
                 if shouldContinue:
                     continue
                 sumCoOccurance += value
-            # For every weighted relation in stuffandobject
+            # For every weighted relation in stuffandobject we create an edge.
             for key, value in i.otherStuffObjects.items():
                 shouldContinue = False
                 # Skipping stuff/objects we dont want.
@@ -55,13 +55,18 @@ class CoOccuranceGraph:
                         shouldContinue = True
                 if shouldContinue:
                     continue
-                if(usepercentage)
+                if(usepercentage):
                     # Only allow edges with a significant enough weight.
                     if (value / sumCoOccurance) * 100 > relationcutoff:
                         fromX.append(i.name)
                         toY.append(str(lookup[str(key)]))
                         weight.append((value / sumCoOccurance) * 100)
-
+                else:
+                    #We use the raw values
+                    fromX.append(i.name)
+                    toY.append(str(lookup[str(key)]))
+                    weight.append(value)
+                    
         df = pd.DataFrame({'from': fromX, 'to': toY, 'weight': weight})
         G = nx.from_pandas_edgelist(df, 'from', 'to', 'weight')
 
