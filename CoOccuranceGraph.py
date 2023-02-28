@@ -13,7 +13,7 @@ class CoOccuranceGraph:
         # If we do not have a Co_occurance.txt or IdLookup.txt file yet we will call the function that creates them.
         if not os.path.isfile("./Co_occurance.txt") or not os.path.isfile("./IdLookup.txt"):
             from BuildCoOccurance import CreateCoOccurance
-            CreateCoOccurance()
+            CreateCoOccurance(countinstances = False)
 
         # TODO: Co_occurance is misspelled
         with open("Co_occurance.txt", "rb") as f:

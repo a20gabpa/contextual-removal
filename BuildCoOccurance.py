@@ -4,7 +4,8 @@ import pickle
 import json
 
 
-def CreateCoOccurance():
+def CreateCoOccurance(countinstances = True):
+    
     object_annotation_path = "dataset/annotations/instances_train2017.json"
     stuff_annotation_path = "dataset/annotations/stuff_train2017.json"
     object_annotations = COCO(annotation_file=object_annotation_path)
@@ -36,18 +37,29 @@ def CreateCoOccurance():
         for i in containsObjectStuff:
             # First for all the objects in the image.
             pictureAnnotations = object_annotations.loadAnns(object_annotations.getAnnIds(i, iscrowd=None))
+            duplicateInstance = []
             for j in pictureAnnotations:
                 if j['category_id'] == objectStuff.id:
                     # Skip self.
                     continue
+                # If we shouldnt count duplicates we will check if the object/stuff has already been added for the image.
+                if not countinstances:
+                    if j['category_id'] in duplicateInstance:
+                        continue
                 objectStuff.otherStuffObjects[j['category_id']] = objectStuff.otherStuffObjects[j['category_id']] + 1
+                duplicateInstance.append(j['category_id'])
 
             # Secondly for all the stuff in the image containing objectStuff
             pictureAnnotations = stuff_annotations.loadAnns(stuff_annotations.getAnnIds(i, iscrowd=None))
+            duplicateInstance = []
             for j in pictureAnnotations:
                 if j['category_id'] == objectStuff.id:
                     continue
+                if not countinstances:
+                    if j['category_id'] in duplicateInstance:
+                        continue
                 objectStuff.otherStuffObjects[j['category_id']] = objectStuff.otherStuffObjects[j['category_id']] + 1
+                duplicateInstance.append(j['category_id'])
 
     print(f"Completed final co-occurance for Train2017 Stuff/Objects")
 
