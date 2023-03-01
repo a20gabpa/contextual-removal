@@ -9,7 +9,7 @@ import math
 from StuffObject import StuffObjectNode
 
 class CoOccuranceGraph:
-    def __init__(self, omit, createpdf = True, relationcutoff = 0.5, usepercentage = True):
+    def __init__(self, omit = [], createpdf = True, relationcutoff = 0.5, usepercentage = True):
         # If we do not have a Co_occurance.txt or IdLookup.txt file yet we will call the function that creates them.
         if not os.path.isfile("./Co_occurance.txt") or not os.path.isfile("./IdLookup.txt"):
             from BuildCoOccurance import CreateCoOccurance
@@ -75,7 +75,7 @@ class CoOccuranceGraph:
         nx.draw_spring(G, node_size=10000, node_color="cyan", with_labels=True)
         
         if(createpdf):
-            plt.savefig('CoOccuranceGraph.pdf')
+            plt.savefig('CoOccuranceGraph.png', transparent=True)
             
         self.nodes = nx.spring_layout(G, seed = 1337)
 
