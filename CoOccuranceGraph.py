@@ -69,10 +69,20 @@ class CoOccuranceGraph:
                     
         df = pd.DataFrame({'from': fromX, 'to': toY, 'weight': weight})
         G = nx.from_pandas_edgelist(df, 'from', 'to', 'weight')
-
+    
         plt.title("Co-Occurance clustering")
         plt.figure(figsize=(150, 150))
-        nx.draw_spring(G, node_size=10000, node_color="cyan", with_labels=True)
+        color_map = []
+        #Adding colors to the graph.
+        for node in G:
+            for key, value in lookup.items():
+                if value == node:
+                    if int(key) < 91:
+                        color_map.append('green')
+                    else:
+                        color_map.append('red')
+                
+        nx.draw_spring(G, node_size=10000, node_color= color_map, with_labels=True)
         
         if(createpdf):
             plt.savefig('CoOccuranceGraph.png', transparent=True)
