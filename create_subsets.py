@@ -126,4 +126,4 @@ def create_subset(img_amount, min_batch_size=160, min_instance_amount=160, enfor
 explore_dataset()
 
 # Step 2: From previous information, create subset of dataset
-create_subset(25600, enforce_size=True)
+create_subset(12800, enforce_size=True)
