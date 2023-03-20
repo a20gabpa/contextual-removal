@@ -38,6 +38,31 @@ path_labels_yolo = {
                 }
 
 # Copy images between two folders
+def copy_images_json(data_type, json_path):
+    counter = 0 # Keep track of total images copied
+
+    file = open(json_path)  # Open .json file
+    image_list = json.load(file)  # Load in .json information
+
+    # Iterate over images in source folder
+    for image_id in image_list['images']:
+
+        temp = str(image_id).zfill(12) + '.jpg'  # Format ID string
+        img_source = os.path.join(path_images[data_type], temp) # Construct path
+        img_dest = os.path.join(path_images_yolo[data_type], temp)
+
+        if os.path.exists(img_source):
+            # Try to copy file
+            try:
+                shutil.copy(img_source, img_dest)
+                print('Image nr. {i} copied...'.format(i = counter))
+
+            except shutil.SameFileError:
+                print('Failed to copy, image nr. {i} is the same...'.format(i = counter))
+
+            counter = counter + 1   # Increase counter
+
+# Copy images between two folders
 def copy_images(amount, data_type):
     counter = 0 # Keep track of total images copied
 
@@ -154,5 +179,7 @@ def process_coco_dataset(data_type):
 file = open(path_annotations['instances'])  # Open .json file
 anns = json.load(file)  # Load in .json information
 
-copy_images(1280, 'images')
+copy_images_json('images', './SubsetEuclidian/twenty/image_list.json')
+
+#copy_images(1280, 'images')
 process_coco_dataset('images')

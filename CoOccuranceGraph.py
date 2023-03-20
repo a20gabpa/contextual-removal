@@ -90,7 +90,9 @@ class CoOccuranceGraph:
             plt.savefig(f"{saveto}CoOccuranceGraph.png", transparent=True)
 
         self.nodes = nx.spring_layout(G, seed=1337)
-
+        
+    #PositionOfObjects(object = ['person', 'bus'])
+    #returns: {'person': [x,y], 'bus': [x,y]}
     def PositionOfObjects(self, objects):
         allObjects = {}
         for object in objects:
