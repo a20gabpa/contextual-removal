@@ -9,11 +9,9 @@ dataset/coco/
 dataset/yolo/
 .ipynb_checkpoints/
 .idea*
-IdLookup.txt
-Co_occurance.txt
-CoOccuranceGraph.pdf
-CoOccuranceGraph.png
 OutliarWithBoxes/
-image_list.json
-category_image_list.json
+counting every isntace/
 runs/
+cool.py
+yolov8m.pt
+yolov8x.pt
