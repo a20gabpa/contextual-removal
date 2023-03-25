@@ -5,6 +5,7 @@ import pickle
 import json
 import networkx as nx
 import os
+import random
 import math
 from StuffObject import StuffObjectNode
 from pycocotools.coco import COCO
@@ -233,7 +234,7 @@ class CoOccuranceGraph:
 
         with open(f"{savefileto}IdLookup.txt", "w") as f:
             f.write(json.dumps(lookup))
-
+    
     def RemovePercentageOfImagesEuclidian(self, pathtofiles, percentagetoremove, subsetofimages):
         subset = []
         subsetDict = {}
@@ -304,6 +305,42 @@ class CoOccuranceGraph:
 
         print(f"Done removing {percentagetoremove}% of anomalous pictures.")
         print(f"The delta for the last itteration was: {highestDelta}")
+        # We remove all the anomalous images from the subsetofimages list.
+        for i in subsetofimages:
+            if i in toBeRemoved:
+                continue
+            subset.append(i)
+
+        # We save the new list of images to be used in the folder we were given.
+        subsetDict["images"] = subset
+        with open(f"{pathtofiles}image_list.json", "w") as f:
+            f.write(json.dumps(subsetDict))
+        print(f"Saved a new subset where {percentagetoremove}% of images are removed to {pathtofiles}image_list.json")
+        return subset
+
+    def RemovePercentageOfImagesRandom(self, pathtofiles, percentagetoremove, subsetofimages, seed):
+        subset = []
+        subsetDict = {}
+
+        # Update random set for reproducibility
+        random.seed(seed)
+
+        amountOfImages = len(subsetofimages)
+ 
+        # Images to be removed from the dataset {<image>: Reason for removal}
+        toBeRemoved = []
+
+        while len(toBeRemoved) / amountOfImages * 100 < percentagetoremove:
+            # Randomize number
+            index = random.randrange(amountOfImages)
+            if not toBeRemoved:
+                toBeRemoved.append(index)
+            else:
+                if index not in toBeRemoved:
+                    toBeRemoved.append(index)
+            break
+
+        print(f"Done removing {percentagetoremove}% of anomalous pictures.")
         # We remove all the anomalous images from the subsetofimages list.
         for i in subsetofimages:
             if i in toBeRemoved:
