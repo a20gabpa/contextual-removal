@@ -24,8 +24,9 @@ class Subset:
             
         with open(f"{pathtoannotation}IdLookup.txt", "r") as f:
             lookup = json.loads(f.read())    
+            
         amountOfImages = 0    
-        for image in subset:
+        for image in subset['images']:
             imageAnnotations = object_annotations.loadAnns(object_annotations.getAnnIds(image, iscrowd=None))
             stuffInImage = stuff_annotations.loadAnns(stuff_annotations.getAnnIds(image, iscrowd=None))
             
@@ -47,11 +48,15 @@ class Subset:
         objectsAndStuff = {}
         for image in self.imagesInSubset:
             for objects in image.objects:
-                objectsAndStuff[objects] += 1
+                if objects not in objectsAndStuff:
+                    objectsAndStuff[objects] = 0
+                objectsAndStuff[objects] = objectsAndStuff[objects] +1
                 
             if onlyobjects == False:
                 for stuff in image.stuff:
-                    objectsAndStuff[stuff] += 1
+                    if stuff not in objectsAndStuff:
+                        objectsAndStuff[stuff] = 0
+                    objectsAndStuff[stuff] = objectsAndStuff[stuff] + 1
                     
         return objectsAndStuff
         
