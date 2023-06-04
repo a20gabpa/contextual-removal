@@ -9,6 +9,7 @@ import random
 import math
 from StuffObject import StuffObjectNode
 from pycocotools.coco import COCO
+from sklearn.cluster import KMeans
 
 
 class CoOccuranceGraph:
@@ -98,7 +99,6 @@ class CoOccuranceGraph:
         allObjects = {}
         for object in objects:
             allObjects[object] = self.nodes[object]
-
         return allObjects
 
     def GetCentroid(self, objects):
@@ -161,6 +161,33 @@ class CoOccuranceGraph:
                 highestRemoved = removed
             objectAndStuff.append(removed)
         return lowest, highest, lowestRemoved, highestRemoved
+    
+    def GetDistanceKMeans(self, objects, stuff=""):
+        distance = 0    # Distance between cluster centers
+        list_objects = []   # List of objects, also includes stuff
+
+        for obj in objects: # Append objects
+            list_objects.append(obj)
+
+        if stuff:
+            for obj in stuff: # Append stuff
+                list_objects.append(obj)
+
+        position_data = []  # List of coordinates for every nodes
+        positions = self.PositionOfObjects(objects) # Node positions of unique objects
+
+        for key,value in positions.items():
+            position_data.append(value) # Append list of coordinates [X,Y]
+        
+        nr_cluster = 2  # Amount of clusters
+        model = KMeans(n_clusters = nr_cluster, init = "k-means++") # Initialize KMeans model
+        model.fit(position_data)    # Cluster objects
+        centroids = model.cluster_centers_  # Extract cluster centers
+
+        if len(centroids) == 2:
+            distance = math.sqrt((centroids[0][0] - centroids[1][0]) ** 2 + (centroids[0][1] - centroids[1][1]) ** 2)   # Calculate distance
+            return distance
+        return 0
 
     def CreateCoOccurance(self, savefileto, images, countinstances=True):
         object_annotation_path = "dataset/annotations/instances_train2017.json"
@@ -305,6 +332,81 @@ class CoOccuranceGraph:
 
         print(f"Done removing {percentagetoremove}% of anomalous pictures.")
         print(f"The delta for the last itteration was: {highestDelta}")
+        # We remove all the anomalous images from the subsetofimages list.
+        for i in subsetofimages:
+            if i in toBeRemoved:
+                continue
+            subset.append(i)
+
+        # We save the new list of images to be used in the folder we were given.
+        subsetDict["images"] = subset
+        with open(f"{pathtofiles}image_list.json", "w") as f:
+            f.write(json.dumps(subsetDict))
+        print(f"Saved a new subset where {percentagetoremove}% of images are removed to {pathtofiles}image_list.json")
+        return subset
+
+    def RemovePercentageOfImagesKMeans(self, pathtofiles, percentagetoremove, subsetofimages):
+        subset = []
+        subsetDict = {}
+        object_annotation_path = "dataset/annotations/instances_train2017.json"
+        object_annotations = COCO(annotation_file=object_annotation_path)
+
+        stuff_annotation_path = "dataset/annotations/stuff_train2017.json"
+        stuff_annotations = COCO(annotation_file=stuff_annotation_path)
+
+        with open("IdLookup.txt", "r") as f:
+            lookup = json.loads(f.read())
+
+        # Creating a map of strings and arrays. Key will be the image id and value is an array of the object/stuff inside the picture.
+        imagesAndObjects = {}
+        imagesAndStuff = {}
+        # Getting all the ids of the images in the coco dataset.
+        imageIds = object_annotations.getImgIds()
+        for image in imageIds:
+            # Skipping the image if it is not a part of the subset.
+            if image not in subsetofimages:
+                continue
+            # Loading the annotations from imageid
+            imageAnnotations = object_annotations.loadAnns(object_annotations.getAnnIds(image, iscrowd=None))
+            stuffInImage = stuff_annotations.loadAnns(stuff_annotations.getAnnIds(image, iscrowd=None))
+
+            objects = []
+            for label in imageAnnotations:
+                # If there is a duplicate we do not want to append it.
+                if lookup[str(label['category_id'])] in objects:
+                    continue
+                objects.append(lookup[str(label['category_id'])])
+
+            stuff = []
+            for label in stuffInImage:
+                if lookup[str(label['category_id'])] in stuff:
+                    continue
+                stuff.append(lookup[str(label['category_id'])])
+
+            imagesAndObjects[str(image)] = objects
+            imagesAndStuff[str(image)] = stuff
+
+        kmeans_score = {}
+        for key, value in imagesAndObjects.items():
+            if len(value) < 2:  # Less than two unique objects
+                continue
+            distance = self.GetDistanceKMeans(value, imagesAndObjects[key]) # Calculate distance
+            kmeans_score[key] = {'distance' : distance, 'object' : value,}  # Store values in dict
+        # Sort dict by distance in reverse order, ie highest first
+        sorted_kmeans_score = dict(sorted(kmeans_score.items(), key=lambda item: item[1]['distance'], reverse=True))   
+
+        amountOfImages = len(subsetofimages)   # Amount to be removed
+        toBeRemoved = []    # Images to be removed from the dataset {<image>: Reason for removal}
+        amount = 0  # Local counter to keep track of total
+        max = amountOfImages * (percentagetoremove / 100)
+        for key, value in sorted_kmeans_score.items():  # Iterate through sorted dict
+            if amount < max:
+                toBeRemoved.append(int(key))    # Append image
+                amount = amount + 1 # Increase
+            else:
+                break   # Exit loop, amount reached
+
+        print(f"Done removing {percentagetoremove}% of anomalous pictures.")
         # We remove all the anomalous images from the subsetofimages list.
         for i in subsetofimages:
             if i in toBeRemoved:
