@@ -1,8 +1,8 @@
 # Ultralytics YOLO 🚀, GPL-3.0 license
 # Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
 path: ./dataset/yolo  # dataset root dir
-train: Z:\Context-CV\dataset\yolo\train2017\images  # train images (relative to 'path') 118287 images
-val: Z:\Context-CV\dataset\yolo\train2017\images  # val images (relative to 'path') 5000 images
+train: ./dataset/yolo/train2017/images  # train images (relative to 'path') 118287 images
+val: ./dataset/yolo/train2017/images  # val images (relative to 'path') 5000 images
 test:  # test images (optional)
 
 # Classes
