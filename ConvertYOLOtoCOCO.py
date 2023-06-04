@@ -104,4 +104,4 @@ def ConvertTOLOannotation(pathtoyololabel, pathtoimagestested):
         f.write(json.dumps(convertedannotations))
         
         
-ConvertTOLOannotation(pathtoyololabel="Z:/Context-CV/runs/detect/BaselineTest/labels", pathtoimagestested = "Z:/Context-CV/dataset/coco/images/test2017")
+ConvertTOLOannotation(pathtoyololabel="./runs/detect/BaselineTest/labels", pathtoimagestested = "./dataset/coco/images/test2017")
